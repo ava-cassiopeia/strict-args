@@ -4,7 +4,7 @@ import {InfoAction} from "./actions/info_action";
 /**
  * Class which parses and manages commands and flags.
  */
-export class StrictFlags {
+export class StrictArgs {
 
   readonly commands = new Map<string, Command>();
 

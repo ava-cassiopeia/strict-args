@@ -1,6 +1,5 @@
 import * as Table from "cli-table3";
 import {Action} from "./action";
-import {StrictFlags} from "../strict_flags";
 
 /**
  * Action which prints info about the entire CLI tool.

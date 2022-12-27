@@ -1,6 +1,6 @@
 import {Flag, FlagConfig, FlagType} from "./flag";
 import {Command, CommandConfig} from "./command";
-import {StrictFlags} from "./strict_flags";
+import {StrictArgs} from "./strict_args";
 
 export {
   Command,
@@ -8,5 +8,5 @@ export {
   Flag,
   FlagConfig,
   FlagType,
-  StrictFlags,
+  StrictArgs,
 };

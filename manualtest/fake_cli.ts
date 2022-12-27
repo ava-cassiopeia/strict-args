@@ -2,22 +2,22 @@
  * @fileoverview A fake CLI that imports the relevant code and makes a fake CLI.
  */
 
-import {StrictFlags} from "../src/index";
+import {StrictArgs} from "../src/index";
 
-const strictFlags = new StrictFlags(
+const strictArgs = new StrictArgs(
     "fake-cli",
-    "A fake CLI tool to test StrictFlags against.");
-strictFlags.registerCommand({
+    "A fake CLI tool to test StrictArgs against.");
+strictArgs.registerCommand({
   name: "start",
   description: "Starts the webserver on port 8080.",
 });
-strictFlags.registerCommand({
+strictArgs.registerCommand({
   name: "status",
   description: "Checks the status of a running webserver.",
 });
-strictFlags.registerCommand({
+strictArgs.registerCommand({
   name: "admin",
   description: "Opens the admin page.",
 });
 
-strictFlags.parse(process.argv);
+strictArgs.parse(process.argv);

@@ -1,11 +1,11 @@
 import "jasmine";
 
-import {StrictFlags} from "../src/strict_flags";
+import {StrictArgs} from "../src/strict_args";
 
-describe("StrictFlags", () => {
+describe("StrictArgs", () => {
   describe(".registerCommand()", () => {
     it("registers a command by name", () => {
-      const flags = new StrictFlags("", "");
+      const flags = new StrictArgs("", "");
       const command = flags.registerCommand({
         name: "flagname",
         description: "",
@@ -16,7 +16,7 @@ describe("StrictFlags", () => {
     });
 
     it("throws if the same command name is registered twice", () => {
-      const flags = new StrictFlags("", "");
+      const flags = new StrictArgs("", "");
       flags.registerCommand({
         name: "flagname",
         description: "",
