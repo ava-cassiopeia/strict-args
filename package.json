@@ -1,6 +1,6 @@
 {
   "name": "strict-flags",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "A NodeJS flags library which strictly enforces flag presence and alerts on unexpected flags.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
