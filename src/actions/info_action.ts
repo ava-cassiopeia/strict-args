@@ -32,7 +32,7 @@ export class InfoAction extends Action {
 
   private renderCLISyntax() {
     const cliName = this.flags.name;
-    return `${cliName} <command>`;
+    return `${cliName} <command> [<args>...]`;
   }
 
   private commandsToTableData(): string[][] {
