@@ -8,7 +8,11 @@ export class StrictFlags {
 
   readonly commands = new Map<string, Command>();
 
-  private readonly infoAction = new InfoAction();
+  private readonly infoAction = new InfoAction(this);
+
+  constructor(
+      readonly name: string,
+      readonly description: string|null = null) {}
 
   /**
    * Registers a new command for this CLI.
@@ -32,7 +36,7 @@ export class StrictFlags {
     reducedArgs.shift();
     
     if (reducedArgs.length < 1) {
-      this.infoAction.execute(args, this);
+      this.infoAction.execute(args);
       return;
     }
 

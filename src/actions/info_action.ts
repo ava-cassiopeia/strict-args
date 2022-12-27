@@ -5,9 +5,9 @@ import {StrictFlags} from "../strict_flags";
 /**
  * Action which prints info about the entire CLI tool.
  */
-export class InfoAction implements Action {
+export class InfoAction extends Action {
 
-  execute(args: string[], flags: StrictFlags) {
+  override execute(args: string[]) {
     const table = new Table({
       chars: {
         'top': '' , 'top-mid': '' , 'top-left': '' , 'top-right': '',
@@ -16,19 +16,29 @@ export class InfoAction implements Action {
         'mid-mid': '', 'right': '' , 'right-mid': '' , 'middle': ' '
       },
     });
-    const tableData = this.commandsToTableData(flags);
+    const tableData = this.commandsToTableData();
     for (const row of tableData) {
       table.push(row);
     }
 
     const renderedTable = table.toString();
+    const renderedSyntax = this.renderCLISyntax();
     
-    console.log(`\n${renderedTable}\n`);
+    console.log(
+        `${renderedSyntax}\n\n` +
+        (!!this.flags.description ? `${this.flags.description}\n\n` : "") +
+        `Available commands:\n\n` +
+        `${renderedTable}\n`);
   }
 
-  private commandsToTableData(flags: StrictFlags): string[][] {
+  private renderCLISyntax() {
+    const cliName = this.flags.name;
+    return `${cliName} <command>`;
+  }
+
+  private commandsToTableData(): string[][] {
     const output: string[][] = [];
-    for (const flag of flags.commands.values()) {
+    for (const flag of this.flags.commands.values()) {
       output.push([
         flag.name,
         flag.description,

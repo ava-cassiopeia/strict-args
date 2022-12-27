@@ -3,8 +3,10 @@ import {StrictFlags} from "../strict_flags";
 /**
  * Defines an action that can be taken for some contextual conditions.
  */
-export interface Action {
+export abstract class Action {
 
-  execute(args: string[], flags: StrictFlags);
+  constructor(readonly flags: StrictFlags) {}
+
+  abstract execute(args: string[]);
 
 }

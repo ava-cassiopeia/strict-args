@@ -5,7 +5,7 @@ import {StrictFlags} from "../src/strict_flags";
 describe("StrictFlags", () => {
   describe(".registerCommand()", () => {
     it("registers a command by name", () => {
-      const flags = new StrictFlags();
+      const flags = new StrictFlags("", "");
       const command = flags.registerCommand({
         name: "flagname",
         description: "",
@@ -16,7 +16,7 @@ describe("StrictFlags", () => {
     });
 
     it("throws if the same command name is registered twice", () => {
-      const flags = new StrictFlags();
+      const flags = new StrictFlags("", "");
       flags.registerCommand({
         name: "flagname",
         description: "",
