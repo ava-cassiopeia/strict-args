@@ -39,6 +39,15 @@ describe("Flag", () => {
     }).toThrowError(/my-flag/);
   });
 
+  it("throws on construction if FLAG has reserved name", () => {
+    expect(() => {
+      new Flag({
+        name: "help",
+        description: "My description.",
+      });
+    }).toThrowError(/help/);
+  });
+
   describe(".isPresent()", () => {
     it("return false before parsing", () => {
       const flag = new Flag({name: "my-flag", description: ""});

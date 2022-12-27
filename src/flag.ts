@@ -1,3 +1,5 @@
+import {RESERVED_FLAG_NAMES} from "./name_denylist";
+
 /**
  * Represents a single command-line flag.
  */
@@ -72,7 +74,10 @@ export class Flag {
   /**
    * Asserts the given config is valid by verifying the following conditions
    * are true:
+   * 
    *   - If this has the FLAG type, it does not also include a default.
+   * 
+   *   - The flag name is not a reserved flag name.
    */
   private static assertConfigValid(config: FlagConfig) {
     if (config.type === FlagType.FLAG && config.default !== undefined) {
@@ -80,6 +85,12 @@ export class Flag {
           `Cannot build flag "${config.name}": this flag is a FLAG but a ` +
           `default was specified. FLAG-type flags don't have values, so a ` +
           `default doesn't do anything.`);
+    }
+
+    if (RESERVED_FLAG_NAMES.includes(config.name)) {
+      throw new Error(
+          `Cannot create a flag with the name '${config.name}', that name is ` +
+          `reserved by the strict-args library.`);
     }
   }
 

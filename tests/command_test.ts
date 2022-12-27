@@ -9,4 +9,9 @@ describe("Command", () => {
       description: "",
     });
   });
+
+  it("throws on construct if the name is reserved", () => {
+    expect(() => new Command({name: "help", description: ""}))
+        .toThrowError(/help/);
+  });
 });
