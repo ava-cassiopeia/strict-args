@@ -1,11 +1,7 @@
-# NodeJS Package TypeScript Template
+# NodeJS Strict Flags
 
-Barebones template for creating NodeJS TypeScript packages.
-
-## TODOs When Package is Copied
-
-- [ ] Update `package.json` package `name` and `description`.
-- [ ] Update this README file
+A NodeJS flags library which strictly enforces flag presence and alerts on
+unexpected flags.
 
 ## Development
 
