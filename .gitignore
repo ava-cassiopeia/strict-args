@@ -1,0 +1,8 @@
+# macOS
+.DS_Store
+
+# NPM
+node_modules/
+
+# TypeScript Build
+dist/
