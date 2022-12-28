@@ -3,6 +3,7 @@
  */
 
 import {StrictArgs} from "../src/index";
+import {StatusCommandListener} from "./status_command_listener";
 
 const strictArgs = new StrictArgs(
     "fake-cli",
@@ -19,5 +20,7 @@ strictArgs.registerCommand({
   name: "admin",
   description: "Opens the admin page.",
 });
+
+strictArgs.addCommandListener("status", (a) => new StatusCommandListener(a));
 
 strictArgs.parse(process.argv);
