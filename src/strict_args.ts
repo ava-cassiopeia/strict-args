@@ -84,8 +84,14 @@ export class StrictArgs {
     }
 
     // Parse global flags
-    for (const flag of this.globalFlags.values()) {
-      reducedArgs = flag.parse(reducedArgs);
+    try {
+      for (const flag of this.globalFlags.values()) {
+        reducedArgs = flag.parse(reducedArgs);
+      }
+    } catch (e) {
+      const error = e as Error;
+      this.logger.logError(error.message);
+      process.exit(ErrorCodes.FAILED_TO_PARSE_GLOBAL_FLAGS);
     }
 
     // Parse command
@@ -104,7 +110,14 @@ export class StrictArgs {
     }
     const command = this.commands.get(commandName)!;
     reducedArgs.splice(0, 1); // remove command name
-    command.parse(reducedArgs);
+    try {
+      command.parse(reducedArgs);
+    } catch (e) {
+      const error = e as Error;
+      this.logger.logError(error.message);
+      process.exit(ErrorCodes.FAILED_TO_PARSE_COMMAND);
+    }
+
     this.notifyCommandListeners(command, args);
   }
 
