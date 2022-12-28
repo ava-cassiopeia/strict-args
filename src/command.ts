@@ -54,6 +54,34 @@ export class Command {
   }
 
   /**
+   * Tries to parse all flags for this command.
+   */
+  parse(args: string[]) {
+    let workingArgs = [...args];
+    for (const flag of this.flags.values()) {
+      workingArgs = flag.parse(workingArgs);
+    }
+
+    // Round up the rest of the arguments
+    let remainingArgs: string[] = [];
+    for (const remaining of workingArgs) {
+      if (remaining.startsWith("-")) {
+        throw new Error(
+            `Unrecognized flag for '${this.name}' command: '${remaining}'.`);
+      }
+      remainingArgs.push(remaining);
+    }
+
+    if (!this.allowArguments && remainingArgs.length > 0) {
+      throw new Error(
+          `Unrecognized / unsupported loose values for command ` +
+          `'${this.name}': [${remainingArgs}]`);
+    }
+
+    this.internalArgs = remainingArgs;
+  }
+
+  /**
    * Verifies that the given config is valid by make sure the following
    * conditions are true:
    * 
