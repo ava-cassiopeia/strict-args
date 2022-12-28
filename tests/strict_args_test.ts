@@ -6,7 +6,7 @@ import {MockCommandListener} from "../src/commandlisteners/mock_command_listener
 describe("StrictArgs", () => {
   describe(".registerCommand()", () => {
     it("registers a command by name", () => {
-      const flags = new StrictArgs("", "");
+      const flags = createArgs();
       const command = flags.registerCommand({
         name: "flagname",
         description: "",
@@ -17,7 +17,7 @@ describe("StrictArgs", () => {
     });
 
     it("throws if the same command name is registered twice", () => {
-      const flags = new StrictArgs("", "");
+      const flags = createArgs();
       flags.registerCommand({
         name: "flagname",
         description: "",
@@ -32,7 +32,7 @@ describe("StrictArgs", () => {
     });
 
     it("throws if the command has flags that conflict with global flags", () => {
-      const flags = new StrictArgs("", "");
+      const flags = createArgs();
       flags.registerGlobalFlag({name: "myflag", description: ""});
 
       expect(() => {
@@ -49,7 +49,7 @@ describe("StrictArgs", () => {
 
   describe(".registerGlobalFlag()", () => {
     it("throws if flag is already registered globally", () => {
-      const strictArgs = new StrictArgs("", "");
+      const strictArgs = createArgs();
       strictArgs.registerGlobalFlag({
         name: "flagname",
         description: "",
@@ -64,7 +64,7 @@ describe("StrictArgs", () => {
     });
 
     it("throws if flag is already registered in a command", () => {
-      const strictArgs = new StrictArgs("", "");
+      const strictArgs = createArgs();
       strictArgs.registerCommand({
         name: "mycommand",
         description: "",
@@ -87,7 +87,7 @@ describe("StrictArgs", () => {
 
   describe(".parse()", () => {
     it("parses global flags", () => {
-      const args = new StrictArgs("", "");
+      const args = createArgs();
       args.registerGlobalFlag({
         name: "my-flag",
         description: "",
@@ -99,7 +99,7 @@ describe("StrictArgs", () => {
     });
 
     it("throws if no command specified", () => {
-      const args = new StrictArgs("fakecli", "");
+      const args = createArgs("fakecli");
       args.registerGlobalFlag({
         name: "my-flag",
         description: "",
@@ -110,7 +110,7 @@ describe("StrictArgs", () => {
     });
 
     it("throws if unrecognized command", () => {
-      const args = new StrictArgs("fakecli", "");
+      const args = createArgs("fakecli");
       args.registerGlobalFlag({
         name: "my-flag",
         description: "",
@@ -122,7 +122,7 @@ describe("StrictArgs", () => {
     });
 
     it("notifies command listeners", () => {
-      const args = new StrictArgs("fakecli", "");
+      const args = createArgs("fakecli");
       const mockCommandListener = new MockCommandListener(args);
       args.registerGlobalFlag({
         name: "my-flag",
@@ -137,3 +137,11 @@ describe("StrictArgs", () => {
     });
   });
 });
+
+function createArgs(name = ""): StrictArgs {
+  return new StrictArgs(
+      name,
+      /* description= */ "",
+      // Always throw errors instead of logging in tests
+      /* throwErrors= */ true);
+}

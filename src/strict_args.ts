@@ -2,7 +2,11 @@ import {Command, CommandConfig} from "./command";
 import {InfoAction} from "./actions/info_action";
 import {Flag, FlagConfig} from "./flag";
 import {CommandListener} from "./commandlisteners/command_listener";
-import { HelpCommandListener } from "./commandlisteners/help_command_listener";
+import {HelpCommandListener} from "./commandlisteners/help_command_listener";
+import {Logger} from "./loggers/logger";
+import {ThrowingLogger} from "./loggers/throwing_logger";
+import {ConsoleLogger} from "./loggers/console_logger";
+import {ErrorCodes} from "./error_codes";
 
 /**
  * Class which parses and manages commands and flags.
@@ -14,10 +18,18 @@ export class StrictArgs {
 
   private readonly commandListeners = new Map<string, CommandListener[]>();
   private readonly infoAction = new InfoAction(this);
+  private readonly logger: Logger;
 
   constructor(
       readonly name: string,
-      readonly description: string|null = null) {}
+      readonly description: string|null = null,
+      throwErrors = false) {
+    if (throwErrors) {
+      this.logger = new ThrowingLogger();
+    } else {
+      this.logger = new ConsoleLogger();
+    }
+  }
 
   /**
    * Registers a new command for this CLI.
@@ -78,15 +90,17 @@ export class StrictArgs {
 
     // Parse command
     if (reducedArgs.length < 1) {
-      throw new Error(
-          `No command specified. Please run '${this.name} help' for a list ` +
-          `of commands.`);
+      this.logger.logError(
+        `No command specified. Please run '${this.name} help' for a list ` +
+        `of commands.`);
+      process.exit(ErrorCodes.NO_COMMAND_SPECIFIED);
     }
     const commandName = reducedArgs[0];
     if (!this.commands.has(commandName)) {
-      throw new Error(
-          `Unrecognized command '${commandName}'. Please run ` +
-          `'${this.name} help' for a list of commands.`);
+      this.logger.logError(
+        `Unrecognized command '${commandName}'. Please run ` +
+        `'${this.name} help' for a list of commands.`);
+      process.exit(ErrorCodes.UNRECOGNIZED_COMMAND);
     }
     const command = this.commands.get(commandName)!;
     reducedArgs.splice(0, 1); // remove command name
