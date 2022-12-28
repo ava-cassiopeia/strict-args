@@ -6,7 +6,7 @@ import {StrictArgs} from "../strict_args";
  */
 export abstract class CommandListener {
 
-  constructor(private readonly args: StrictArgs) {}
+  constructor(protected readonly args: StrictArgs) {}
 
   abstract onCommand(command: Command, args: string[]);
 

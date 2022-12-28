@@ -1,6 +1,7 @@
 import "jasmine";
 
 import {StrictArgs} from "../src/strict_args";
+import {MockCommandListener} from "../src/commandlisteners/mock_command_listener";
 
 describe("StrictArgs", () => {
   describe(".registerCommand()", () => {
@@ -81,6 +82,58 @@ describe("StrictArgs", () => {
           description: "",
         });
       }).toThrowError(/flagname.*mycommand/);
+    });
+  });
+
+  describe(".parse()", () => {
+    it("parses global flags", () => {
+      const args = new StrictArgs("", "");
+      args.registerGlobalFlag({
+        name: "my-flag",
+        description: "",
+      });
+      args.registerCommand({name: "fake", description: ""});
+      args.parse(["", "", "fake", "--my-flag"]);
+
+      expect(args.globalFlags.get("my-flag")!.isPresent()).toBe(true);
+    });
+
+    it("throws if no command specified", () => {
+      const args = new StrictArgs("fakecli", "");
+      args.registerGlobalFlag({
+        name: "my-flag",
+        description: "",
+      });
+      args.registerCommand({name: "fake", description: ""});
+
+      expect(() => args.parse(["", "", "--my-flag"])).toThrowError(/fakecli/);
+    });
+
+    it("throws if unrecognized command", () => {
+      const args = new StrictArgs("fakecli", "");
+      args.registerGlobalFlag({
+        name: "my-flag",
+        description: "",
+      });
+      args.registerCommand({name: "fake", description: ""});
+
+      expect(() => args.parse(["", "", "another"]))
+          .toThrowError(/another.*fakecli/);
+    });
+
+    it("notifies command listeners", () => {
+      const args = new StrictArgs("fakecli", "");
+      const mockCommandListener = new MockCommandListener(args);
+      args.registerGlobalFlag({
+        name: "my-flag",
+        description: "",
+      });
+      args.registerCommand({name: "fake", description: ""});
+      args.addCommandListener("fake", (a) => mockCommandListener);
+
+      args.parse(["", "", "fake"]);
+
+      expect(mockCommandListener.callCount).toEqual(1);
     });
   });
 });
