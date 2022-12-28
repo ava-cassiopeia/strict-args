@@ -110,4 +110,116 @@ describe("Flag", () => {
       expect(flag.isPresent()).toBe(true);
     });
   });
+
+  describe(".parse()", () => {
+    it("throws if a required FLAG isn't present", () => {
+      const flag = new Flag({
+        name: "my-flag",
+        description: "",
+        type: FlagType.FLAG,
+        required: true,
+      });
+      expect(() => flag.parse(["something", "myflag", "-my-flag"]))
+          .toThrowError(/my-flag/);
+    });
+
+    it("throws if a required PROPERTY isn't present", () => {
+      const flag = new Flag({
+        name: "my-flag",
+        description: "",
+        type: FlagType.PROPERTY,
+        required: true,
+      });
+      expect(() => flag.parse(["something", "myflag", "--my-flag"]))
+          .toThrowError(/my-flag/);
+    });
+
+    it("sets presence & returns subarray for found FLAG", () => {
+      const flag = new Flag({
+        name: "my-flag",
+        description: "",
+        type: FlagType.FLAG,
+      });
+      const remainingArgs = flag.parse(["something", "--my-flag", "--another"]);
+
+      expect(flag.isPresent()).toBe(true);
+      expect(remainingArgs).toEqual(["something", "--another"]);
+    });
+
+    it("sets presence & returns subarray for found PROPERTY", () => {
+      const flag = new Flag({
+        name: "my-flag",
+        description: "",
+        type: FlagType.PROPERTY,
+      });
+      const remainingArgs =
+          flag.parse(["something", "-my-flag", "value", "another-thing"]);
+
+      expect(flag.isPresent()).toBe(true);
+      expect(flag.get()).toEqual("value");
+      expect(remainingArgs).toEqual(["something", "another-thing"]);
+    });
+
+    it("sets presence & returns subarray for found PROPERTY (=)", () => {
+      const flag = new Flag({
+        name: "my-flag",
+        description: "",
+        type: FlagType.PROPERTY,
+      });
+      const remainingArgs =
+          flag.parse(["something", "-my-flag=value", "another-thing"]);
+
+      expect(flag.isPresent()).toBe(true);
+      expect(flag.get()).toEqual("value");
+      expect(remainingArgs).toEqual(["something", "another-thing"]);
+    });
+
+    it("sets presence & returns subarray for found PROPERTY (=\")", () => {
+      const flag = new Flag({
+        name: "my-flag",
+        description: "",
+        type: FlagType.PROPERTY,
+      });
+      const remainingArgs = flag.parse([
+        "something",
+        "-my-flag=\"some \"inner\" quote\"",
+        "another-thing",
+      ]);
+
+      expect(flag.isPresent()).toBe(true);
+      expect(flag.get()).toEqual("some \"inner\" quote");
+      expect(remainingArgs).toEqual(["something", "another-thing"]);
+    });
+
+    it("throws if PROPERTY doesn't include value", () => {
+      const flag = new Flag({
+        name: "my-flag",
+        description: "",
+        type: FlagType.PROPERTY,
+      });
+      
+      expect(() => flag.parse(["something", "-my-flag"]))
+          .toThrowError(/-my-flag/);
+    });
+
+    it("throws if PROPERTY doesn't include value (=)", () => {
+      const flag = new Flag({
+        name: "my-flag",
+        description: "",
+        type: FlagType.PROPERTY,
+      });
+      expect(() => flag.parse(["something", "-my-flag=", "another-thing"]))
+          .toThrowError(/-my-flag/);
+    });
+
+    it("throws if PROPERTY doesn't include value (=\")", () => {
+      const flag = new Flag({
+        name: "my-flag",
+        description: "",
+        type: FlagType.PROPERTY,
+      });
+      expect(() => flag.parse(["something", "-my-flag=\"\"", "another-thing"]))
+          .toThrowError(/-my-flag/);
+    });
+  });
 });

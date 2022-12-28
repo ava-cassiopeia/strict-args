@@ -72,6 +72,105 @@ export class Flag {
   }
 
   /**
+   * Given a list of arguments, tries to locate this flag within them. If
+   * successful, sets presence and value, or throws if something is amiss.
+   * Removes itself from the list of arguments once complete.
+   */
+  parse(args: string[]): string[] {
+    const fullName = this.getFullName();
+    let foundFlagArg: string|null = null;
+    let foundPosition = -1;
+
+    for (let i = 0; i < args.length; i++) {
+      const arg = args[i];
+      if (arg.startsWith(fullName)
+          || (this.type === FlagType.PROPERTY
+              && arg.startsWith(fullName + "="))) {
+        foundFlagArg = arg;
+        foundPosition = i;
+        break;
+      }
+    }
+
+    if (foundFlagArg === null && this.required) {
+      throw new Error(`${fullName} is required, please specify it.`);
+    }
+    if (foundFlagArg === null) return args;
+
+    // At this point, we've found the flag for sure, so if it is just a FLAG
+    // then set presence and finish up.
+    if (this.type === FlagType.FLAG) {
+      this.setPresence();
+      args.splice(foundPosition, 1);
+      return args;
+    }
+
+    // Otherwise, we have a flag, and we know it is an ARGUMENT. We must now
+    // gather the value for the argument, which can be provided either with an
+    // "=" or with a space, ie.:
+    //
+    //  -my-argument=foobar
+    //  -my-argument foobar
+    const argWithoutFlag = foundFlagArg.substring(fullName.length);
+
+    // This means the value (should) be specified in the next arg.
+    if (argWithoutFlag.trim() === "") {
+      // There isn't another arg
+      if (!args[foundPosition + 1]) this.throwNoValueError();
+      this.setPresence(args[foundPosition + 1]!);
+      args.splice(foundPosition, 2);
+      return args;
+    }
+
+    // If we've reached here, the value (should) be specified after an equals
+    // sign, optionally surrounded by quotes ("):
+    //
+    //  -my-argument=foobar
+    let workingValue = argWithoutFlag;
+    // Remove "="
+    workingValue = workingValue.substring(1);
+    // Remove quotes
+    if (workingValue.startsWith("\"") && workingValue.endsWith("\"")) {
+      workingValue = workingValue.substring(1, workingValue.length - 1);
+    }
+    
+    // set value
+    if (workingValue.trim() === "") this.throwNoValueError();
+    this.setPresence(workingValue);
+    args.splice(foundPosition, 1);
+    return args;
+  }
+
+  /**
+   * Returns the leading dashes that are used to form this entire flag.
+   */
+  getPrefix(): string {
+    switch (this.type) {
+      case FlagType.FLAG:
+        return "--";
+      case FlagType.PROPERTY:
+        return "-";
+      default:
+        throw new Error("This should never be reached.");
+    }
+  }
+
+  /**
+   * Returns the full name of this flag, with the leading dashes.
+   */
+  getFullName(): string {
+    return `${this.getPrefix()}${this.name}`;
+  }
+
+  private throwNoValueError() {
+    throw new Error(
+        `Argument ${this.getFullName()} specified, but without a value. ` +
+        `Please specify a value by passing one of:\n` +
+        `${this.getFullName()}=<value>\n` +
+        `${this.getFullName()} <value>`);
+  }
+
+  /**
    * Asserts the given config is valid by verifying the following conditions
    * are true:
    * 
