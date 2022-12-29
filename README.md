@@ -14,9 +14,9 @@ See this project's
 [GitHub Wiki](https://github.com/ava-cassiopeia/strict-args/wiki) for API
 documentation.
 
-This library is a spiritual successor to
+_This library is a spiritual successor to
 [@ava-cassiopeia/really-simple-args](https://github.com/ava-cassiopeia/really-simple-args),
-with a focus on stricter syntax checking.
+with a focus on stricter syntax checking._
 
 <!-- TOC depthfrom:2 -->
 
@@ -101,7 +101,7 @@ Pull requests are also very much welcome, and will be reviewed on a "best
 effort" basis. This is typically within a few days, but can sometimes take
 awhile as this project is maintained by one human.
 
-More information is available for developing with the codebase below:
+More information is available for developing with the codebase below.
 
 ### Development
 
