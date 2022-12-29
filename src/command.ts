@@ -54,6 +54,21 @@ export class Command {
   }
 
   /**
+   * Returns the value of the flag with the specified name. If the flag wasn't
+   * specified, returns the flag's default value.
+   * @throws If no flag with the provided name exists, throws.
+   */
+  getFlagValue(flagName: string): string {
+    if (!this.flags.has(flagName)) {
+      throw new Error(
+          `Cannot get flag value for flag '${flagName}' in command ` +
+          `'${this.name}': the specified flag does not exist.`);
+    }
+    const flag = this.flags.get(flagName)!;
+    return flag.get();
+  }
+
+  /**
    * Tries to parse all flags for this command.
    */
   parse(args: string[]) {

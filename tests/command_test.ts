@@ -152,4 +152,40 @@ describe("Command", () => {
       expect(command.getArgs()).toEqual(["something", "another thing"]);
     });
   });
+
+  describe(".getFlagValue()", () => {
+    it("returns the relevant flag value", () => {
+      const command = new Command({
+        name: "mycommand",
+        description: "",
+        flags: [
+          {
+            name: "my-prop",
+            description: "",
+            type: FlagType.PROPERTY,
+          },
+        ],
+      });
+      command.parse(["-my-prop", "value"]);
+
+      expect(command.getFlagValue("my-prop")).toEqual("value");
+    });
+
+    it("throws if the flag doesn't exist", () => {
+      const command = new Command({
+        name: "mycommand",
+        description: "",
+        flags: [
+          {
+            name: "my-prop",
+            description: "",
+            type: FlagType.PROPERTY,
+          },
+        ],
+      });
+      
+      expect(() => command.getFlagValue("error-flag"))
+          .toThrowError(/error-flag.*mycommand/);
+    });
+  });
 });

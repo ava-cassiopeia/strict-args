@@ -68,6 +68,21 @@ export class StrictArgs {
   }
 
   /**
+   * Returns the value of the flag with the specified name. If the flag wasn't
+   * specified, returns the flag's default value.
+   * @throws If no flag with the provided name exists, throws.
+   */
+  getFlagValue(flagName: string): string {
+    if (!this.globalFlags.has(flagName)) {
+      throw new Error(
+          `Cannot get global flag value for global flag '${flagName}': the ` +
+          `specified flag does not exist.`);
+    }
+    const flag = this.globalFlags.get(flagName)!;
+    return flag.get();
+  }
+
+  /**
    * Parses the given command-line arguments, printing out help text and
    * warnings to the console as needed.
    */

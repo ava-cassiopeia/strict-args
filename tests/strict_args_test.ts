@@ -2,6 +2,7 @@ import "jasmine";
 
 import {StrictArgs} from "../src/strict_args";
 import {MockCommandListener} from "../src/commandlisteners/mock_command_listener";
+import {FlagType} from "../src/flag";
 
 describe("StrictArgs", () => {
   describe(".registerCommand()", () => {
@@ -134,6 +135,35 @@ describe("StrictArgs", () => {
       args.parse(["", "", "fake"]);
 
       expect(mockCommandListener.callCount).toEqual(1);
+    });
+  });
+
+  describe(".getFlagValue()", () => {
+    it("returns the relevant flag value", () => {
+      const args = createArgs("fakecli");
+      args.registerCommand({
+        name: "command",
+        description: "",
+      });
+      args.registerGlobalFlag({
+        name: "my-prop",
+        description: "",
+        type: FlagType.PROPERTY,
+      });
+      args.parse(["", "", "command", "-my-prop", "fakeValue"]);
+
+      expect(args.getFlagValue("my-prop")).toEqual("fakeValue");
+    });
+
+    it("throws if the flag doesn't exist", () => {
+      const args = createArgs("fakecli");
+      args.registerGlobalFlag({
+        name: "my-prop",
+        description: "",
+        type: FlagType.PROPERTY,
+      });
+      
+      expect(() => args.getFlagValue("error-flag")).toThrowError(/error-flag/);
     });
   });
 });
