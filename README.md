@@ -18,6 +18,8 @@ _This library is a spiritual successor to
 [@ava-cassiopeia/really-simple-args](https://github.com/ava-cassiopeia/really-simple-args),
 with a focus on stricter syntax checking._
 
+---
+
 <!-- TOC depthfrom:2 -->
 
 - [Quickstart](#quickstart)
