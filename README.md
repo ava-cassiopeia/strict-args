@@ -1,5 +1,7 @@
 # NodeJS Strict Args
 
+[![Build and Test](https://github.com/ava-cassiopeia/strict-args/actions/workflows/build_and_test.yml/badge.svg?branch=main)](https://github.com/ava-cassiopeia/strict-args/actions/workflows/build_and_test.yml)
+
 [GitHub Wiki](https://github.com/ava-cassiopeia/strict-args/wiki) \
 [GitHub Issue Tracker](https://github.com/ava-cassiopeia/strict-args/issues)
 
