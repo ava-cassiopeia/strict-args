@@ -1,6 +1,6 @@
 # NodeJS Strict Args
 
-[GitHub Wiki](https://github.com/ava-cassiopeia/strict-args/wiki)
+[GitHub Wiki](https://github.com/ava-cassiopeia/strict-args/wiki) \
 [GitHub Issue Tracker](https://github.com/ava-cassiopeia/strict-args/issues)
 
 A NodeJS arguments library which strictly enforces flag presence, command
