@@ -7,11 +7,13 @@ describe("Command", () => {
   it("constructs successfully setting defaults", () => {
     const command = new Command({
       name: "mycommand",
-      description: "",
+      description: "fake description",
     });
 
     expect(command.allowArguments).toBe(false);
     expect(command.flags.size).toEqual(0);
+    expect(command.longDescription).toEqual("fake description");
+    expect(command.syntaxHint).toBeNull();
   });
 
   it("throws on construct if the name is reserved", () => {

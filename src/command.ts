@@ -9,6 +9,8 @@ export class Command {
   readonly name: string;
   readonly description: string;
   readonly allowArguments: boolean;
+  readonly longDescription: string;
+  readonly syntaxHint: string|null;
   readonly flags = new Map<string, Flag>();
 
   private internalArgs: string[] = [];
@@ -19,6 +21,8 @@ export class Command {
     this.description = config.description;
     this.allowArguments =
         config.allowArguments !== undefined ? config.allowArguments : false;
+    this.longDescription = config.longDescription || this.description;
+    this.syntaxHint = config.syntaxHint || null;
 
     if (!config.flags) return;
     config.flags!
@@ -123,6 +127,16 @@ export interface CommandConfig {
    * "yourcli --help" or "yourcli help <commandname>".
    */
   description: string;
+  /**
+   * An optional long description that is only printed when a user asks for the
+   * full help information for this command.
+   */
+  longDescription?: string;
+  /**
+   * An optional syntax hint (like "start <server_name>") that appears instead
+   * of the automatically generated syntax hint in help printouts.
+   */
+  syntaxHint?: string;
   /**
    * Defaults to an empty list. List of flags associated with this command.
    */

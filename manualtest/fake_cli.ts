@@ -11,6 +11,8 @@ const strictArgs = new StrictArgs(
 strictArgs.registerCommand({
   name: "start",
   description: "Starts the webserver on port 8080.",
+  longDescription: "Starts the webserver on port 8080, assuming no webserver is running.",
+  syntaxHint: "start <server name> [options...]",
   flags: [
     {
       name: "port",

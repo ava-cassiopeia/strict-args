@@ -19,10 +19,13 @@ export class HelpCommandListener extends CommandListener {
     }
     const helpCommand = this.args.commands.get(commandName)!;
     const commandFlags = HelpCommandListener.formatCommandFlags(helpCommand);
+    const syntaxHint =
+        this.args.name + " " + helpCommand.syntaxHint
+        || `${this.args.name} ${helpCommand.name} [args...] [options...]`;
 
     console.log(
-        `${this.args.name} ${helpCommand.name} [args...] [options...]\n\n` +
-        `${helpCommand.description}` +
+        `${syntaxHint}\n\n` +
+        `${helpCommand.longDescription}` +
         commandFlags +
         "\n");
   }
