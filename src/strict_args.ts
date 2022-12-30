@@ -2,7 +2,6 @@ import {Command, CommandConfig} from "./command";
 import {InfoAction} from "./actions/info_action";
 import {Flag, FlagConfig} from "./flag";
 import {CommandListener} from "./commandlisteners/command_listener";
-import {HelpCommandListener} from "./commandlisteners/help_command_listener";
 import {Logger} from "./loggers/logger";
 import {ThrowingLogger} from "./loggers/throwing_logger";
 import {ConsoleLogger} from "./loggers/console_logger";
