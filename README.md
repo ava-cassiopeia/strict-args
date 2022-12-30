@@ -1,5 +1,6 @@
 # NodeJS Strict Args
 
+[![npm version](https://badge.fury.io/js/strict-args.svg)](https://badge.fury.io/js/strict-args) \
 [![Build and Test](https://github.com/ava-cassiopeia/strict-args/actions/workflows/build_and_test.yml/badge.svg?branch=main)](https://github.com/ava-cassiopeia/strict-args/actions/workflows/build_and_test.yml)
 
 [GitHub Wiki](https://github.com/ava-cassiopeia/strict-args/wiki) \
