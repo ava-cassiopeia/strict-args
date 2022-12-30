@@ -1,6 +1,6 @@
 {
   "name": "strict-args",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A NodeJS arguments library which strictly enforces flag presence, command syntax, alerts on unexpected flags, and manages help and command outputs.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
