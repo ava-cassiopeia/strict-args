@@ -7,6 +7,7 @@ import {ThrowingLogger} from "./loggers/throwing_logger";
 import {ConsoleLogger} from "./loggers/console_logger";
 import {ErrorCodes} from "./error_codes";
 import {HELP_COMMAND} from "./builtincommands/help";
+import {HELP_FLAG} from "./builtinflags/help_flag";
 import {HelpCommandListener} from "./commandlisteners/help_command_listener";
 
 /**
@@ -136,6 +137,13 @@ export class StrictArgs {
       process.exit(ErrorCodes.FAILED_TO_PARSE_COMMAND);
     }
 
+    // Short circuit normal execution if the help flag is present, and instead
+    // just show help information.
+    if (this.globalFlags.get(HELP_FLAG.name)!.isPresent()) {
+      this.notifyHelpCommandListener(command);
+      return;
+    }
+
     try {
       this.notifyCommandListeners(command, args);
     } catch (e) {
@@ -143,6 +151,13 @@ export class StrictArgs {
       this.logger.logError(error.message);
       process.exit(ErrorCodes.ERROR_IN_COMMAND_LISTENER);
     }
+  }
+
+  private notifyHelpCommandListener(command: Command) {
+    const helpCommand = this.commands.get(HELP_COMMAND.name)!;
+    const fakeArgs = [command.name];
+    helpCommand.parse(fakeArgs);
+    this.notifyCommandListeners(helpCommand, fakeArgs);
   }
 
   private notifyCommandListeners(command: Command, args: string[]) {
@@ -177,6 +192,9 @@ export class StrictArgs {
     this.registerCommand(HELP_COMMAND);
     this.addCommandListener(
         HELP_COMMAND.name, (a) => new HelpCommandListener(a));
+
+    // Help flag
+    this.registerGlobalFlag(HELP_FLAG);
   }
 
 }

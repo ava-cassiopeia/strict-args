@@ -186,7 +186,8 @@ export class Flag {
           `default doesn't do anything.`);
     }
 
-    if (RESERVED_FLAG_NAMES.includes(config.name)) {
+    if (!config.internalOnlyDoNotUseIsBuiltIn
+        && RESERVED_FLAG_NAMES.includes(config.name)) {
       throw new Error(
           `Cannot create a flag with the name '${config.name}', that name is ` +
           `reserved by the strict-args library.`);
@@ -220,6 +221,7 @@ export interface FlagConfig {
    * is provided by the user.
    */
   default?: string;
+  internalOnlyDoNotUseIsBuiltIn?: boolean;
 }
 
 export enum FlagType {
