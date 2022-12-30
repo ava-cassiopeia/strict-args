@@ -19,6 +19,7 @@ export class StrictArgs {
   readonly globalFlags = new Map<string, Flag>();
 
   private readonly commandListeners = new Map<string, CommandListener[]>();
+  private readonly beforeCommandCallbacks: BeforeCommandCallback[] = [];
   private readonly infoAction = new InfoAction(this);
   private readonly logger: Logger;
 
@@ -69,6 +70,15 @@ export class StrictArgs {
       this.commandListeners.set(commandName, []);
     }
     this.commandListeners.get(commandName)!.push(makeListener(this));
+  }
+
+  /**
+   * Registers the given callback to be called after parsing is complete but
+   * before command listeners are notified. Useful for setting up global data
+   * based on global flags.
+   */
+  beforeCommand(callback: BeforeCommandCallback) {
+    this.beforeCommandCallbacks.push(callback);
   }
 
   /**
@@ -145,6 +155,7 @@ export class StrictArgs {
     }
 
     try {
+      this.notifyBeforeCommandListeners();
       this.notifyCommandListeners(command, args);
     } catch (e) {
       const error = e as Error;
@@ -164,6 +175,12 @@ export class StrictArgs {
     if (!this.commandListeners.has(command.name)) return;
     const listeners = this.commandListeners.get(command.name)!;
     listeners.forEach((l) => l.onCommand(command, args));
+  }
+
+  private notifyBeforeCommandListeners() {
+    for (const callback of this.beforeCommandCallbacks) {
+      callback(this);
+    }
   }
 
   private assertCommandNotRegistered(commandName: string) {
@@ -198,3 +215,5 @@ export class StrictArgs {
   }
 
 }
+
+export type BeforeCommandCallback = (args: StrictArgs) => void;

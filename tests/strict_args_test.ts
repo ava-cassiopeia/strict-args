@@ -136,6 +136,23 @@ describe("StrictArgs", () => {
 
       expect(mockCommandListener.callCount).toEqual(1);
     });
+
+    it("notifies before command listeners", () => {
+      let callCount = 0;
+      const args = createArgs("fakecli");
+      args.registerGlobalFlag({
+        name: "my-flag",
+        description: "",
+      });
+      args.registerCommand({name: "fake", description: ""});
+      args.beforeCommand(() => {
+        callCount++;
+      });
+
+      args.parse(["", "", "fake"]);
+
+      expect(callCount).toEqual(1);
+    });
   });
 
   describe(".getFlagValue()", () => {
