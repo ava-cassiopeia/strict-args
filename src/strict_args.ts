@@ -6,6 +6,8 @@ import {Logger} from "./loggers/logger";
 import {ThrowingLogger} from "./loggers/throwing_logger";
 import {ConsoleLogger} from "./loggers/console_logger";
 import {ErrorCodes} from "./error_codes";
+import {HELP_COMMAND} from "./builtincommands/help";
+import {HelpCommandListener} from "./commandlisteners/help_command_listener";
 
 /**
  * Class which parses and manages commands and flags.
@@ -28,6 +30,8 @@ export class StrictArgs {
     } else {
       this.logger = new ConsoleLogger();
     }
+
+    this.registerBuiltIns();
   }
 
   /**
@@ -132,7 +136,13 @@ export class StrictArgs {
       process.exit(ErrorCodes.FAILED_TO_PARSE_COMMAND);
     }
 
-    this.notifyCommandListeners(command, args);
+    try {
+      this.notifyCommandListeners(command, args);
+    } catch (e) {
+      const error = e as Error;
+      this.logger.logError(error.message);
+      process.exit(ErrorCodes.ERROR_IN_COMMAND_LISTENER);
+    }
   }
 
   private notifyCommandListeners(command: Command, args: string[]) {
@@ -160,6 +170,13 @@ export class StrictArgs {
             `${command.name} command.`);
       }
     }
+  }
+
+  private registerBuiltIns() {
+    // Help command
+    this.registerCommand(HELP_COMMAND);
+    this.addCommandListener(
+        HELP_COMMAND.name, (a) => new HelpCommandListener(a));
   }
 
 }

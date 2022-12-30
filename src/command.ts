@@ -103,7 +103,7 @@ export class Command {
    *   - The command name is not a reserved command name.
    */
   private static assertConfigValid(config: CommandConfig) {
-    if (RESERVED_COMMAND_NAMES.includes(config.name)) {
+    if (!config.internalOnlyDoNotUseIsBuiltIn && RESERVED_COMMAND_NAMES.includes(config.name)) {
       throw new Error(
           `Cannot create command with name '${config.name}', that name is ` +
           `reserved by the strict-args library.`);
@@ -132,4 +132,5 @@ export interface CommandConfig {
    * values in the args that don't match any parameter or flag.
    */
   allowArguments?: boolean;
+  internalOnlyDoNotUseIsBuiltIn?: boolean;
 }

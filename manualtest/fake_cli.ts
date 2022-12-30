@@ -2,7 +2,7 @@
  * @fileoverview A fake CLI that imports the relevant code and makes a fake CLI.
  */
 
-import {StrictArgs} from "../src/index";
+import {StrictArgs, FlagType} from "../src/index";
 import {StatusCommandListener} from "./status_command_listener";
 
 const strictArgs = new StrictArgs(
@@ -11,6 +11,17 @@ const strictArgs = new StrictArgs(
 strictArgs.registerCommand({
   name: "start",
   description: "Starts the webserver on port 8080.",
+  flags: [
+    {
+      name: "port",
+      description: "The port to run the webserver on.",
+      type: FlagType.PROPERTY,
+    },
+    {
+      name: "open",
+      description: "Opens web browser to navigate to the running webserver.",
+    },
+  ],
 });
 strictArgs.registerCommand({
   name: "status",
